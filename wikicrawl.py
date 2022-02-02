@@ -7,9 +7,9 @@ Rules:
 3. Stopping when: reaching "Philosophy" / a page without links / if a loop occurs
 """
 
+import copy
 import re
 import requests
-import copy
 
 START_PAGE = "/wiki/Wikipedia:Special:Random"
 pages = set()
