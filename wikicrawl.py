@@ -1,24 +1,43 @@
 """
-WIP
+Script to automate the Wikipedia philosophy game
+
+Rules:
+1. Clicking on the first non-parenthesized, non-italicized link
+2. Ignoring external links, links to the current page, or red links
+3. Stopping when: reaching "Philosophy" / a page without links / if a loop occurs
 """
 
-# Rules:
-# 1. Clicking on the first non-parenthesized, non-italicized link
-# 2. Ignoring external links, links to the current page, or red links
-# 3. Stopping when: reaching "Philosophy" / a page without links / if a loop occurs
-
-from requests import get
 import re
+import requests
+import copy
 
-start_page = "/wiki/Wikipedia:Special:Random"
-start_page = "/wiki/Elon_musk"
+START_PAGE = "/wiki/Wikipedia:Special:Random"
+pages = set()
+
 
 def get_first_link(wiki_page: str) -> str:
-    html = get("https://wikipedia.org" + wiki_page).text
+    """Get the first non-parenthesized, non-italicized link in the main body"""
+
+    html = requests.get("https://wikipedia.org" + wiki_page).text
     href = re.search(r"<p>.*?href=\"(\/wiki\/[^:]*?)\"", html)[1]
     return href
 
-wiki_page = start_page
-while wiki_page != "/wiki/Philosophy":
-    wiki_page = get_first_link(wiki_page)
-    print(wiki_page)
+
+def main():
+    """Go to every first link and get a new one until it's /wiki/Philosophy """
+
+    wiki_page = copy.copy(START_PAGE)
+    i = 0
+
+    while wiki_page != "/wiki/Philosophy":
+        i += 1
+        wiki_page = get_first_link(wiki_page)
+        if wiki_page in pages:
+            print("Stuck in a loop")
+            break
+        pages.add(wiki_page)
+        print(f"{i}. {wiki_page}")
+
+
+if __name__ == "__main__":
+    main()
