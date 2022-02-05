@@ -1,6 +1,6 @@
 # Philosophy Wikicrawl
 
-Automating the Wikipedia philosophy game using a python web crawler
+Automating the [Wikipedia philosophy game](https://en.wikipedia.org/wiki/Wikipedia:Getting_to_Philosophy) using a python web crawler
 
 ## Installation and Usage
 
