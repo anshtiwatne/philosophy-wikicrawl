@@ -11,8 +11,8 @@ Rules:
 import copy
 import re
 from types import NoneType
+import webbrowser
 import requests
-from playwright.sync_api import sync_playwright
 
 
 START_PAGE = "/wiki/Special:Random"
@@ -40,21 +40,10 @@ def crawl():
             raise Exception("Arrived at a page with no links")
         elif wiki_page in pages:
             raise Exception("Stuck in a loop")
-        pages.add(wiki_page)
-        
+        pages.add(wiki_page)       
         yield wiki_page
 
 
-def main():
-    """Go to every link yielded by the crawl function"""
-
-    with sync_playwright() as sync:
-        browser = sync.chromium.launch(headless=False, slow_mo=50)
-        page = browser.new_page()
-
-        for link in crawl():
-            page.goto(f"https://wikipedia.org{link}")
-
-
 if __name__ == "__main__":
-    main()
+    for wiki_page in crawl():
+        webbrowser.open(f"https://wikipedia.org/{wiki_page}")
